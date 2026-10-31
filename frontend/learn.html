@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Haath Se</title>
+<meta name="description" content="Learn Indian Sign Language with your webcam.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/"><span class="name">Haath Se</span><span class="deva" lang="hi">हाथ से</span></a>
+    <div class="row">
+      <span class="team-bar">Learning as <span class="team-name" id="who">Guest</span><a class="link-btn" href="/">Change</a></span>
+      <nav class="tabs" role="tablist" aria-label="Sections">
+        <button class="tab" role="tab" id="tab-learn" data-view="learn">Learn</button>
+        <button class="tab" role="tab" id="tab-practice" data-view="practice">Practice</button>
+        <button class="tab" role="tab" id="tab-rush" data-view="rush">Sign Rush</button>
+        <button class="tab" role="tab" id="tab-rights" data-view="rights">Your rights</button>
+      </nav>
+      <button class="icon-btn" id="soundBtn" aria-pressed="true">Sound on</button>
+    </div>
+  </header>
+
+  <!-- RIGHTS + AWARENESS (also shown first, before the first lesson) -->
+  <section class="rights" id="rightsView" hidden aria-labelledby="rightsTitle">
+    <div class="rights-head">
+      <p class="eyebrow" id="rightsEyebrow">Before you begin</p>
+      <h2 id="rightsTitle">Know the rights of Deaf people in India</h2>
+      <p id="rightsLede">Sign language isn't a favour or a hobby. Indian law and international commitments recognise it as a right. Read these first, then start learning.</p>
+    </div>
+    <ol class="laws" id="lawList"></ol>
+    <p class="note">These are plain-language summaries for awareness, not legal advice. Follow the links for the full official text.</p>
+    <div class="row" id="beginRow">
+      <button class="btn primary" id="beginBtn">I've read this. Start learning</button>
+    </div>
+    <div class="facts-wrap" id="factsWrap" hidden>
+      <div class="rights-head">
+        <p class="eyebrow">Did you know?</p>
+        <h2>Facts you've unlocked</h2>
+        <p id="factsLede">Every sign you learn unlocks one.</p>
+      </div>
+      <ol class="facts" id="factList"></ol>
+    </div>
+  </section>
+
+  <main class="layout" id="app" hidden>
+    <section class="stage-col" aria-label="Camera">
+      <div class="stage" id="stage">
+        <video id="video" playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <canvas id="game" hidden></canvas>
+        <div class="hud">
+          <span class="chip" id="handsChip">No hands</span>
+          <span class="chip seen" id="seen" aria-live="polite">–</span>
+        </div>
+        <div class="cam-gate" id="camGate">
+          <h2>Turn on your camera</h2>
+          <p>Haath Se watches your hands to check your signs. Your video never leaves this device.</p>
+          <button class="btn primary" id="startCam">Start camera</button>
+          <p class="status" id="camStatus" role="status"></p>
+        </div>
+      </div>
+      <div class="meter"><span>Match</span><div class="bar"><div class="fill" id="confFill"></div></div><span class="val" id="confVal">0%</span></div>
+    </section>
+
+    <aside class="panel">
+      <!-- LEARN -->
+      <section class="panel-section" data-panel="learn" role="tabpanel" aria-labelledby="tab-learn">
+        <div class="overall">
+          <div class="overall-top"><span>Your progress</span><span><strong id="overallNum">0</strong> of 65 signs learned</span></div>
+          <div class="overall-bar"><div class="overall-fill" id="overallFill"></div></div>
+        </div>
+        <div class="units" id="unitTabs" role="group" aria-label="Units"></div>
+        <div class="panel-head">
+          <p class="eyebrow" id="unitEyebrow">Unit 1</p>
+          <h2 id="unitTitle">Numbers</h2>
+          <p id="unitNote"></p>
+        </div>
+        <article class="lesson" aria-labelledby="learnName">
+          <div class="lesson-top">
+            <div class="ring-wrap" id="learnRingWrap">
+              <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true">
+                <circle class="ring-track" cx="75" cy="75" r="66" fill="none" stroke-width="10"></circle>
+                <circle class="ring-fill" id="learnRing" cx="75" cy="75" r="66" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="414.69" stroke-dashoffset="414.69"></circle>
+              </svg>
+              <div class="ring-label" id="learnLabel">1</div>
+            </div>
+            <div class="lesson-id">
+              <p class="lesson-kicker" id="lessonCount">Sign 1 of 9</p>
+              <h3 class="lesson-title" id="learnName">Number 1</h3>
+              <div class="chips-row" id="lessonChips"></div>
+            </div>
+          </div>
+          <div class="copy-card" id="copyCard">
+            <div class="copy-media" id="learnRef"></div>
+            <span class="copy-tag" id="copyTag">Copy this</span>
+            <div class="demo-mode" id="demoMode" role="group" aria-label="Demo view" hidden>
+              <button type="button" data-mode="both">Picture</button>
+              <button type="button" data-mode="outline">Hand outline</button>
+            </div>
+          </div>
+          <section class="how-card" aria-labelledby="howTitle">
+            <h4 class="how-title" id="howTitle">How to sign it</h4>
+            <ol class="how-steps" id="howSteps"></ol>
+            <p class="how-note">These steps describe what the demo shows. <a id="learnIslrtc" href="https://islrtc.nic.in/" target="_blank" rel="noopener">Check the sign with ISLRTC</a>.</p>
+          </section>
+          <ol class="stepper" id="learnSteps" aria-label="Your progress on this sign">
+            <li id="stepWatch">Watch</li>
+            <li id="stepCopy">Copy it on camera</li>
+            <li id="stepHold">Hold until the ring fills</li>
+          </ol>
+          <label class="check guide-toggle"><input type="checkbox" id="guideToggle" checked> Show a guide outline of the sign on my camera</label>
+        </article>
+        <p class="status-line" id="learnStatus"></p>
+        <p class="feedback" id="learnFeedback" aria-live="polite"></p>
+        <div class="row">
+          <button class="btn small" id="learnPrev">Previous</button>
+          <button class="btn small primary" id="gotIt">I've got it</button>
+          <button class="btn small" id="learnNext">Skip</button>
+        </div>
+        <div class="strip" id="learnStrip" aria-label="Signs in this unit"></div>
+        <div class="fact-card" id="factCard" aria-live="polite">
+          <p class="eyebrow" id="factCount">Did you know?</p>
+          <p class="fact-title" id="factTitle">Learn your first sign to unlock a fact</p>
+          <p class="fact-body" id="factBody">Every sign you learn reveals something about Deaf people and ISL in India.</p>
+          <a class="note" id="factSource" target="_blank" rel="noopener" hidden></a>
+        </div>
+        <details class="cam-settings">
+          <summary>Camera settings</summary>
+          <label class="range" for="tol"><span>Match tolerance</span><span class="mono" id="tolVal">2.0</span></label>
+          <input type="range" id="tol" min="0.8" max="4" step="0.1" value="2">
+          <p class="note">Raise it if your correct signs aren't detected. Lower it if wrong signs are accepted.</p>
+        </details>
+      </section>
+
+      <!-- PRACTICE -->
+      <section class="panel-section" data-panel="practice" role="tabpanel" aria-labelledby="tab-practice" hidden>
+        <div class="panel-head">
+          <p class="eyebrow">Practice</p>
+          <h2>Ten signs, from memory</h2>
+          <p>No pictures this time. Sign fast for three stars: under 3 seconds earns 3, under 6 earns 2.</p>
+        </div>
+        <div class="empty" id="pracEmpty" hidden>
+          <p><strong>Camera checking isn't set up for enough signs yet.</strong> Practice needs at least two signs that the organisers have recorded. Keep learning in the meantime.</p>
+          <button class="btn primary small" data-goto="learn">Back to Learn</button>
+        </div>
+        <div id="pracIdle" class="row"><button class="btn primary" id="pracStart">Start practice</button></div>
+        <div id="pracBody" hidden class="panel-section">
+          <div class="stats">
+            <div class="stat"><div class="k">Round</div><div class="v" id="pracRound">1/10</div></div>
+            <div class="stat"><div class="k">Time</div><div class="v" id="pracTime">0.0</div></div>
+            <div class="stat"><div class="k">Stars</div><div class="v" id="pracStars">0</div></div>
+          </div>
+          <div class="target">
+            <div class="ring-wrap" id="pracRingWrap">
+              <svg viewBox="0 0 150 150" width="150" height="150" aria-hidden="true">
+                <circle class="ring-track" cx="75" cy="75" r="66" fill="none" stroke-width="10"></circle>
+                <circle class="ring-fill" id="pracRing" cx="75" cy="75" r="66" fill="none" stroke-width="10" stroke-linecap="round" stroke-dasharray="414.69" stroke-dashoffset="414.69"></circle>
+              </svg>
+              <div class="ring-label" id="pracLabel">?</div>
+            </div>
+            <div class="target-meta">
+              <p class="starline" id="pracStarline" aria-live="polite"></p>
+              <p class="note">Show this sign</p>
+              <div class="row"><button class="btn small" id="pracSkip">Skip</button></div>
+            </div>
+          </div>
+        </div>
+        <div id="pracDone" hidden class="empty">
+          <p class="subhead" id="pracSummary"></p>
+          <button class="btn primary small" id="pracAgain">Play again</button>
+        </div>
+      </section>
+
+      <!-- SIGN RUSH -->
+      <section class="panel-section" data-panel="rush" role="tabpanel" aria-labelledby="tab-rush" hidden>
+        <div class="panel-head">
+          <p class="eyebrow">Sign Rush</p>
+          <h2>Pop the bubbles before they float away</h2>
+          <p>Each bubble shows a sign. Make that sign to pop it. Miss three and the round ends. It speeds up as you score.</p>
+        </div>
+        <div class="empty" id="rushEmpty" hidden>
+          <p><strong>Camera checking isn't set up for enough signs yet.</strong> Sign Rush needs at least two recorded signs.</p>
+          <button class="btn primary small" data-goto="learn">Back to Learn</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="k">Score</div><div class="v" id="rushScore">0</div></div>
+          <div class="stat"><div class="k">Lives</div><div class="v hearts" id="rushLives">♥♥♥</div></div>
+          <div class="stat"><div class="k">Best</div><div class="v" id="rushBest">0</div></div>
+        </div>
+        <p class="feedback" id="rushMsg" aria-live="polite"></p>
+        <div class="row">
+          <button class="btn primary" id="rushStart">Start Sign Rush</button>
+          <button class="btn" id="rushStop" hidden>Stop</button>
+        </div>
+        <div class="board">
+          <p class="subhead">Leaderboard</p>
+          <ol id="board"></ol>
+          <p class="note" id="boardEmpty">No scores yet. Be the first.</p>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <footer>Haath Se teaches static signs. Number and letter pictures: ISL chart by Karthikeyu Busa and Shravani Katte (<a href="https://github.com/Karthikeyu/Indian-sign-language-recognition" target="_blank" rel="noopener">MIT licence</a>). Always check signs with <a href="https://islrtc.nic.in/" target="_blank" rel="noopener">ISLRTC</a>. Expression movements measured from community ISL avatar clips (<a href="https://github.com/Rohitkumar-3103/Indian_Sign_Language_Projects" target="_blank" rel="noopener">source</a>, not ISLRTC-verified). Hand tracking runs on your device with MediaPipe. <span class="mono">Version 4 · 65 built-in signs with steps</span></footer>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<script type="module" src="/static/js/learn.js"></script>
+</body>
+</html>
