@@ -4,7 +4,11 @@ export class ApiError extends Error {
   constructor(message, status) { super(message); this.status = status; }
 }
 
+// True on GitHub Pages (or a file opened directly): no Python server, so no leaderboard or setup.
+export const STATIC_SITE = location.hostname.endsWith("github.io") || location.protocol === "file:";
+
 export async function api(path, { method = "GET", body, pin } = {}) {
+  if (STATIC_SITE) throw new ApiError("This needs the Python server. Run Haath Se locally to use it.", 0);
   const headers = {};
   if (body !== undefined) headers["Content-Type"] = "application/json";
   if (pin) headers["X-Setup-Pin"] = pin;

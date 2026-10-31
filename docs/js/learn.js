@@ -1,5 +1,5 @@
 // Learner page: rights first, then Learn / Practice / Sign Rush.
-import { api, getPref, setPref, toast } from "./data.js";
+import { api, getPref, setPref, toast, STATIC_SITE } from "./data.js";
 import { features, Recognizer, Smoother, HoldTimer } from "./recognizer.js";
 import { Tracker, sounds, setSound, setRing, bump, themeColor } from "./camera.js";
 import { UNITS, ALL_SIGNS, signById, LAWS, LAW_SOURCES, FACTS, ISLRTC_URL } from "./lessons.js";
@@ -37,7 +37,7 @@ async function loadData(quiet) {
     recog.load(samples, BUILTIN);
   } catch (e) {
     recog.load([], BUILTIN);
-    if (!quiet) toast("Couldn't reach the server. Built-in signs still work.");
+    if (!quiet && !STATIC_SITE) toast("Couldn't reach the server. Built-in signs still work.");
   }
   if (view === "learn") renderLearn();
   if (view === "practice") renderPractice();
@@ -291,7 +291,7 @@ function renderDemo(s, changed) {
     startFigureAnim(cv, built.anim);
   } else if (!clips[s.id] && built) {
     // Built-in picture of the sign with an animated hand outline drawn over it.
-    const img = new Image(); img.className = "builtin"; img.src = `/static/img/signs/${s.id}.jpg`; img.alt = `Picture of the ISL sign for ${s.name}`;
+    const img = new Image(); img.className = "builtin"; img.src = new URL(`../img/signs/${s.id}.jpg`, import.meta.url).href; img.alt = `Picture of the ISL sign for ${s.name}`;
     const cv = document.createElement("canvas"); cv.className = "demo-skel";
     box.append(img, cv);
     $("#copyTag").textContent = "Copy this";
@@ -643,7 +643,7 @@ async function stopRush(msg) {
   if (rush.score > getPref("best", 0)) { setPref("best", rush.score); if (msg) msg += " New best!"; }
   $("#rushMsg").textContent = msg;
   renderRush();
-  if (msg && rush.score > 0) {
+  if (msg && rush.score > 0 && !STATIC_SITE) {
     try { await api("/scores", { method: "POST", body: { nickname, score: rush.score } }); }
     catch (e) { toast("Couldn't save your score to the leaderboard."); }
     loadBoard();
@@ -702,7 +702,7 @@ $("#rushStop").addEventListener("click", () => stopRush(`Stopped at ${rush.score
 
 async function loadBoard() {
   let rows = [];
-  try { rows = await api("/leaderboard"); } catch (e) { $("#boardEmpty").textContent = "Couldn't load the leaderboard."; $("#boardEmpty").hidden = false; return; }
+  try { rows = await api("/leaderboard"); } catch (e) { $("#boardEmpty").textContent = STATIC_SITE ? "The shared leaderboard runs on our Python server. Your best score is saved on this device." : "Couldn't load the leaderboard."; $("#boardEmpty").hidden = false; return; }
   const ol = $("#board"); ol.replaceChildren();
   rows.forEach((r, i) => {
     const li = el("li", r.nickname === nickname ? "me" : "");

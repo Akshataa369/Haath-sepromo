@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Haath Se Setup</title>
+<meta name="description" content="Organiser page for recording the ISL signs the camera checks.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="index.html"><span class="name">Haath Se</span><span class="deva" lang="hi">हाथ से</span></a>
+    <span class="team-bar"><span class="team-name">Organiser setup</span><a class="link-btn" href="learn.html">Go to learner view</a></span>
+  </header>
+
+  <section class="pin-card" id="pinCard">
+    <p class="eyebrow">Organisers only</p>
+    <h2>Enter the setup PIN</h2>
+    <p class="note">The PIN is printed in the terminal when the server starts, or set with the SETUP_PIN environment variable.</p>
+    <form id="pinForm" class="start-form">
+      <div class="field"><label for="pin">Setup PIN</label><input id="pin" class="code" inputmode="numeric" autocomplete="off" maxlength="12" required></div>
+      <div class="field"><label for="byName">Your name (shown as "recorded by")</label><input id="byName" maxlength="20" autocomplete="nickname"></div>
+      <p class="error" id="pinError" role="alert"></p>
+      <button class="btn primary" type="submit">Unlock setup</button>
+    </form>
+  </section>
+
+  <main class="layout" id="app" hidden>
+    <section class="stage-col" aria-label="Camera">
+      <div class="stage" id="stage">
+        <video id="video" playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="hud">
+          <span class="chip" id="handsChip">No hands</span>
+          <span class="chip seen" id="seen" aria-live="polite">–</span>
+        </div>
+        <div class="countdown" id="countdown" hidden><span class="n" id="cdNum">3</span><span class="msg" id="cdMsg">Get ready</span></div>
+        <div class="cam-gate" id="camGate">
+          <h2>Turn on your camera</h2>
+          <p>Record each sign by copying it from the ISLRTC dictionary. Video stays on this device; only hand-point numbers and one small photo are saved.</p>
+          <button class="btn primary" id="startCam">Start camera</button>
+          <p class="status" id="camStatus" role="status"></p>
+        </div>
+      </div>
+      <div class="meter"><span>Match</span><div class="bar"><div class="fill" id="confFill"></div></div><span class="val" id="confVal">0%</span></div>
+    </section>
+
+    <aside class="panel">
+      <section class="panel-section">
+        <div class="panel-head">
+          <p class="eyebrow">Record signs</p>
+          <h2>Teach the camera each ISL sign</h2>
+          <p>Look the sign up in ISLRTC's <strong>Sign Learn</strong> app or the <a href="https://islrtc.nic.in/" target="_blank" rel="noopener">ISLRTC dictionary</a>. Then, for each sign:</p>
+          <ol class="setup-steps">
+            <li><strong>Demo clip.</strong> A 3-second video learners will copy. Do the full sign, including any movement.</li>
+            <li><strong>Hand shape.</strong> Hold the main shape still for 3 seconds. The camera uses this to check learners. Record it 2 or 3 times, ideally with different people's hands.</li>
+          </ol>
+        </div>
+        <label class="check"><input type="checkbox" id="replacePhoto"> Replace the reference photo on the next recording</label>
+        <div class="units" id="setupUnits" role="group" aria-label="Units"></div>
+        <div id="signGroups" class="panel-section"></div>
+        <div class="settings">
+          <p class="subhead">Recognition</p>
+          <label class="range" for="tol"><span>Match tolerance (this device)</span><span class="mono" id="tolVal">2.0</span></label>
+          <input type="range" id="tol" min="0.8" max="4" step="0.1" value="2">
+          <p class="note">Closest match right now: <span class="mono" id="nearVal">–</span>. Lower is stricter.</p>
+        </div>
+        <div class="settings">
+          <p class="subhead">Sign pack</p>
+          <p class="note">Export a backup of every recording, or import one (including exports from the single-file Haath Se). Imported signs are matched by their label, such as "3" or "A".</p>
+          <div class="row">
+            <button class="btn small" id="exportBtn">Export sign pack</button>
+            <label class="btn small" for="importFile">Import sign pack</label>
+            <input type="file" id="importFile" accept="application/json,.json" hidden>
+          </div>
+        </div>
+      </section>
+    </aside>
+  </main>
+  <footer>Only hand-point numbers and small reference photos are stored on the server.</footer>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+<script type="module" src="js/setup.js"></script>
+</body>
+</html>

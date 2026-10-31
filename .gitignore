@@ -1,0 +1,12 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+# Local data (recordings, scores, demo clips)
+backend/data.json
+backend/data.tmp
+backend/*.broken.json
+backend/media/
+# macOS / editors
+.DS_Store
+.vscode/
