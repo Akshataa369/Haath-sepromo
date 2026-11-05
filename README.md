@@ -2,7 +2,8 @@
 
 A web app that teaches Indian Sign Language (ISL) with your webcam. Learners first read the rights of Deaf people in India, then learn ISL numbers and the alphabet. The camera checks each sign in real time, and every sign learned unlocks a fact about Deaf people and ISL in India.
 
-Built at CodeDay Bengaluru, Fall 2026.
+Built at CodeDay Bengaluru, Fall 2026. 
+Live Site: https://akshataa369.github.io/Haath-sepromo/
 
 ## The problem
 
